@@ -18,7 +18,10 @@ namespace ZeelandWalksApi.Repositories
                
             // Create claims
             var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Name, user.UserName));
             claims.Add(new Claim(ClaimTypes.Email, user.Email));
+
+
             foreach(var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
@@ -26,7 +29,7 @@ namespace ZeelandWalksApi.Repositories
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
-                configuration["jwt:Issuer"],
+                configuration["Jwt:Issuer"],
                 configuration["Jwt:Audience"],
                 claims,
                 expires: DateTime.Now.AddMinutes(20),

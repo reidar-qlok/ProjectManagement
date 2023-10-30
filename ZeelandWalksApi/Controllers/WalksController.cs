@@ -5,6 +5,7 @@ using ZeelandWalksApi.Models.DTO;
 using ZeelandWalksApi.Repositories;
 using System.Net;
 using NZeelandWalksApi.CustomActionFilters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZeelandWalksApi.Controllers
 {
@@ -27,6 +28,7 @@ namespace ZeelandWalksApi.Controllers
         // POST: /api/walks
         [HttpPost]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] AddWalkRequestDto addWalkRequestDto)
         {
             // Map DTO to Domain Model
@@ -42,6 +44,7 @@ namespace ZeelandWalksApi.Controllers
         // GET Walks
         // GET: /api/walks?filterOn=Name&filterQuery=Track&sortBy=Name&isAscending=true&pageNumber=1&pageSize=10
         [HttpGet]
+        [Authorize(Roles = "Reader, Writer")]
         public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery,
             [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
@@ -57,6 +60,7 @@ namespace ZeelandWalksApi.Controllers
         // GET: /api/Walks/{id}
         [HttpGet]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Reader, Writer")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var walkDomainModel = await walkRepository.GetByIdAsync(id);
@@ -75,6 +79,7 @@ namespace ZeelandWalksApi.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, UpdateWalkRequestDto updateWalkRequestDto)
         {
 
@@ -87,7 +92,6 @@ namespace ZeelandWalksApi.Controllers
             {
                 return NotFound();
             }
-
             // Map Domain Model to DTO
             return Ok(mapper.Map<WalkDto>(walkDomainModel));
         }
@@ -97,6 +101,7 @@ namespace ZeelandWalksApi.Controllers
         // DELETE: /api/Walks/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var deletedWalkDomainModel = await walkRepository.DeleteAsync(id);

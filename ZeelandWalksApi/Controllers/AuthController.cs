@@ -64,11 +64,11 @@ namespace ZeelandWalksApi.Controllers
                         var jwttoken = tokenRepository.CreateJWTToken(user, roles.ToList());
                         var response = new LoginResponseDto
                         {
-                            JwtToken = jwttoken
+                            AccessToken = jwttoken
                         };
                         return Ok(response);
                     }
-                    // Create token
+                 
                     
                     
                 }
