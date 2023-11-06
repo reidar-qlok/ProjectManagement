@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ZeelandWalksApi.Controllers
@@ -8,7 +9,7 @@ namespace ZeelandWalksApi.Controllers
     {
         private static readonly string[] Summaries = new[]
         {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        "Freesing", "Braking", "Chilly", "Cool", "Milddd", "Warm", "Balmys", "Hot", "Smeltering", "Scorching"
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
@@ -19,6 +20,7 @@ namespace ZeelandWalksApi.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
+        [Authorize(Roles = "Reader, Writer")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
