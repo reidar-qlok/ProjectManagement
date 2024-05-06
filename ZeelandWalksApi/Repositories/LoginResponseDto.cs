@@ -1,4 +1,4 @@
-﻿namespace ZeelandWalksApi.Repositories
+﻿namespace ProjectManagerApi.Repositories
 {
     public class LoginResponseDto
     {

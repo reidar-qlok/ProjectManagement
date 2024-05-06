@@ -5,34 +5,33 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ZeelandWalksApi.Data;
+using ProjectManagerApi.Data;
 
 #nullable disable
 
-namespace ZeelandWalksApi.Migrations
+namespace ProjectManagerApi.Migrations
 {
-    [DbContext(typeof(NZWalksDbContext))]
-    [Migration("20231011162913_inmedtabeller")]
-    partial class inmedtabeller
+    [DbContext(typeof(PMDbContext))]
+    [Migration("20240222200205_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "7.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ZeelandWalksApi.Models.Domain.Difficulty", b =>
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.Difficulty", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -57,7 +56,25 @@ namespace ZeelandWalksApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ZeelandWalksApi.Models.Domain.Image", b =>
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.Employee", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("EmployeeId");
+
+                    b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.Image", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,15 +84,12 @@ namespace ZeelandWalksApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileExtension")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FilePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("FileSizeInBytes")
@@ -86,18 +100,72 @@ namespace ZeelandWalksApi.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("ZeelandWalksApi.Models.Domain.Region", b =>
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.Project", b =>
+                {
+                    b.Property<int>("ProjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
+
+                    b.Property<string>("ProjectName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("ProjectId");
+
+                    b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.ProjectAssignment", b =>
+                {
+                    b.Property<int>("ProjectAssignmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectAssignmentId"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("HoursWorked")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WorkDescription")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("ProjectAssignmentId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectAssignments");
+                });
+
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.Region", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RegionImageUrl")
@@ -149,14 +217,13 @@ namespace ZeelandWalksApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ZeelandWalksApi.Models.Domain.Walk", b =>
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.Walk", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("DifficultyId")
@@ -166,7 +233,6 @@ namespace ZeelandWalksApi.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("RegionId")
@@ -184,15 +250,34 @@ namespace ZeelandWalksApi.Migrations
                     b.ToTable("Walks");
                 });
 
-            modelBuilder.Entity("ZeelandWalksApi.Models.Domain.Walk", b =>
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.ProjectAssignment", b =>
                 {
-                    b.HasOne("ZeelandWalksApi.Models.Domain.Difficulty", "Difficulty")
+                    b.HasOne("ProjectManagerApi.Models.Domain.Employee", "Employee")
+                        .WithMany("ProjectAssignments")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManagerApi.Models.Domain.Project", "Project")
+                        .WithMany("ProjectAssignments")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.Walk", b =>
+                {
+                    b.HasOne("ProjectManagerApi.Models.Domain.Difficulty", "Difficulty")
                         .WithMany()
                         .HasForeignKey("DifficultyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ZeelandWalksApi.Models.Domain.Region", "Region")
+                    b.HasOne("ProjectManagerApi.Models.Domain.Region", "Region")
                         .WithMany()
                         .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -201,6 +286,16 @@ namespace ZeelandWalksApi.Migrations
                     b.Navigation("Difficulty");
 
                     b.Navigation("Region");
+                });
+
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.Employee", b =>
+                {
+                    b.Navigation("ProjectAssignments");
+                });
+
+            modelBuilder.Entity("ProjectManagerApi.Models.Domain.Project", b =>
+                {
+                    b.Navigation("ProjectAssignments");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,23 +3,22 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ProjectManagerApi.Data;
+using ProjectManagerApi.Repositories;
 using System.Text;
-using ZeelandWalksApi.Data;
-using ZeelandWalksApi.Mappings;
-using ZeelandWalksApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddHttpContextAccessor();  
+builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Walks API", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Projects API", Version = "v0.01" });
     options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -47,28 +46,26 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddDbContext<NZWalksDbContext>(options =>
+builder.Services.AddDbContext<PMDbContext>(options =>
  options.UseSqlServer(
 builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDbContext<NxWalkAuthDbContext>(options =>
+builder.Services.AddDbContext<PMAuthDbContext>(options =>
  options.UseSqlServer(
 builder.Configuration.GetConnectionString("DefaultAuthConnection")));
 
 //
-builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
-builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IImageRepository, LocalImageRepository>();
 
 
 
-builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+//builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 builder.Services.AddIdentityCore<IdentityUser>()
     .AddRoles<IdentityRole>()
-    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("NZWalks")
-    .AddEntityFrameworkStores<NxWalkAuthDbContext>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("PMProject")
+    .AddEntityFrameworkStores<PMAuthDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -102,7 +99,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience= builder.Configuration["Jwt:Audience"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     });

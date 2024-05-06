@@ -1,17 +1,17 @@
-﻿using ZeelandWalksApi.Data;
-using ZeelandWalksApi.Models.Domain;
+﻿using ProjectManagerApi.Data;
+using ProjectManagerApi.Models.Domain;
 
-namespace ZeelandWalksApi.Repositories
+namespace ProjectManagerApi.Repositories
 {
     public class LocalImageRepository : IImageRepository
     {
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly NZWalksDbContext dbContext;
+        private readonly PMDbContext dbContext;
 
         public LocalImageRepository(IWebHostEnvironment webHostEnvironment,
             IHttpContextAccessor httpContextAccessor,
-            NZWalksDbContext dbContext)
+            PMDbContext dbContext)
         {
             this.webHostEnvironment = webHostEnvironment;
             this.httpContextAccessor = httpContextAccessor;
@@ -21,7 +21,7 @@ namespace ZeelandWalksApi.Repositories
 
         public async Task<Image> Upload(Image image)
         {
-            var localFilePath = Path.Combine(webHostEnvironment.ContentRootPath, "Images", 
+            var localFilePath = Path.Combine(webHostEnvironment.ContentRootPath, "Images",
                 $"{image.FileName}{image.FileExtension}");
 
             // Upload Image to Local Path

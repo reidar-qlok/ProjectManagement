@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ZeelandWalksApi.Data
+namespace ProjectManagerApi.Data
 {
-    public class NxWalkAuthDbContext : IdentityDbContext
+    public class PMAuthDbContext : IdentityDbContext
     {
-        public NxWalkAuthDbContext(DbContextOptions<NxWalkAuthDbContext> options) : base(options)
+        public PMAuthDbContext(DbContextOptions<PMAuthDbContext> options) : base(options)
         {
-                
+
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {

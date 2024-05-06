@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ZeelandWalksApi.Models.DTO;
-using ZeelandWalksApi.Repositories;
+using ProjectManagerApi.Models.DTO;
+using ProjectManagerApi.Repositories;
 
 
-namespace ZeelandWalksApi.Controllers
+namespace ProjectManagerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -31,13 +30,13 @@ namespace ZeelandWalksApi.Controllers
             };
             var identityResult = await userManager.CreateAsync(identityUser, registerRequestDto.Password);
 
-            if(identityResult.Succeeded)
+            if (identityResult.Succeeded)
             {
                 // add role to this user
-                if(registerRequestDto.Roles != null && registerRequestDto.Roles.Any()) 
-                { 
+                if (registerRequestDto.Roles != null && registerRequestDto.Roles.Any())
+                {
                     identityResult = await userManager.AddToRolesAsync(identityUser, registerRequestDto.Roles);
-                    if(identityResult.Succeeded)
+                    if (identityResult.Succeeded)
                     {
                         return Ok("The user was registered! You can now login");
                     }
@@ -52,14 +51,14 @@ namespace ZeelandWalksApi.Controllers
         {
             var user = await userManager.FindByEmailAsync(loginRequestDto.Username);
 
-            if(user!=null)
+            if (user != null)
             {
                 var checkPasswordResult = await userManager.CheckPasswordAsync(user, loginRequestDto.Password);
-                if(checkPasswordResult)
+                if (checkPasswordResult)
                 {
                     // get a role for the user
                     var roles = await userManager.GetRolesAsync(user);
-                    if(roles != null) 
+                    if (roles != null)
                     {
                         var jwttoken = tokenRepository.CreateJWTToken(user, roles.ToList());
                         var response = new LoginResponseDto
@@ -68,9 +67,9 @@ namespace ZeelandWalksApi.Controllers
                         };
                         return Ok(response);
                     }
-                 
-                    
-                    
+
+
+
                 }
             }
             return BadRequest("username or password was incorrect");

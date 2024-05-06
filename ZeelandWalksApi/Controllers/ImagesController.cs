@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ZeelandWalksApi.Models.Domain;
-using ZeelandWalksApi.Models.DTO;
-using ZeelandWalksApi.Repositories;
+﻿using Microsoft.AspNetCore.Mvc;
+using ProjectManagerApi.Models.Domain;
+using ProjectManagerApi.Models.DTO;
+using ProjectManagerApi.Repositories;
 
-namespace ZeelandWalksApi.Controllers
+namespace ProjectManagerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,4 +1,4 @@
-namespace ZeelandWalksApi
+namespace ProjectManagerApi
 {
     public class WeatherForecast
     {

@@ -1,11 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace ZeelandWalksApi.Migrations.NxWalkAuthDb
+namespace ProjectManagerApi.Migrations.NxWalkAuthDb
 {
     /// <inheritdoc />
     public partial class CreateAuthDatabase : Migration

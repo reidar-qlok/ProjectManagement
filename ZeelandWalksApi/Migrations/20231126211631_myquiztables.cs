@@ -1,14 +1,13 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace ZeelandWalksApi.Migrations
+namespace ProjectManagerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class inmedtabeller : Migration
+    public partial class myquiztables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +17,7 @@ namespace ZeelandWalksApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,11 +29,11 @@ namespace ZeelandWalksApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FileDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FileSizeInBytes = table.Column<long>(type: "bigint", nullable: false),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,12 +41,26 @@ namespace ZeelandWalksApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "QuizQuestions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CorrectAnswer = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuizQuestions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Regions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegionImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -56,12 +69,31 @@ namespace ZeelandWalksApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "QOptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    QuizId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    QuizQuestionsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QOptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_QOptions_QuizQuestions_QuizQuestionsId",
+                        column: x => x.QuizQuestionsId,
+                        principalTable: "QuizQuestions",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Walks",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LengthInKm = table.Column<double>(type: "float", nullable: false),
                     WalkImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DifficultyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -108,6 +140,11 @@ namespace ZeelandWalksApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_QOptions_QuizQuestionsId",
+                table: "QOptions",
+                column: "QuizQuestionsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Walks_DifficultyId",
                 table: "Walks",
                 column: "DifficultyId");
@@ -125,7 +162,13 @@ namespace ZeelandWalksApi.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
+                name: "QOptions");
+
+            migrationBuilder.DropTable(
                 name: "Walks");
+
+            migrationBuilder.DropTable(
+                name: "QuizQuestions");
 
             migrationBuilder.DropTable(
                 name: "Difficulties");

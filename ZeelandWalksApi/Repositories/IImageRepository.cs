@@ -1,6 +1,6 @@
-﻿using ZeelandWalksApi.Models.Domain;
+﻿using ProjectManagerApi.Models.Domain;
 
-namespace ZeelandWalksApi.Repositories
+namespace ProjectManagerApi.Repositories
 {
     public interface IImageRepository
     {

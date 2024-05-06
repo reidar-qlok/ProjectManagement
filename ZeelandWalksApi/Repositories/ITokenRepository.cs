@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ZeelandWalksApi.Repositories
+namespace ProjectManagerApi.Repositories
 {
     public interface ITokenRepository
     {

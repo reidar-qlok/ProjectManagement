@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ZeelandWalksApi.Models.DTO
+namespace ProjectManagerApi.Models.DTO
 {
     public class ImageUploadRequestDto
     {
@@ -10,6 +10,6 @@ namespace ZeelandWalksApi.Models.DTO
         [Required]
         public string FileName { get; set; }
 
-        public string? FileDescription { get; set; }
+        public string FileDescription { get; set; }
     }
 }

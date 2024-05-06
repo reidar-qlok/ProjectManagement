@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ZeelandWalksApi.Data;
+using ProjectManagerApi.Data;
 
 #nullable disable
 
-namespace ZeelandWalksApi.Migrations.NxWalkAuthDb
+namespace ProjectManagerApi.Migrations.NxWalkAuthDb
 {
-    [DbContext(typeof(NxWalkAuthDbContext))]
+    [DbContext(typeof(PMAuthDbContext))]
     [Migration("20231012131319_CreateAuthDatabase")]
     partial class CreateAuthDatabase
     {

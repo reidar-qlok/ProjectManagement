@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ZeelandWalksApi.Models.DTO
+namespace ProjectManagerApi.Models.DTO
 {
     public class LoginRequestDto
     {
